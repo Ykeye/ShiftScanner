@@ -1,0 +1,68 @@
+from __future__ import print_function #line:1
+from print_moonin import print_moonin #line:2
+import datetime #line:3
+import os .path #line:4
+from datetime import timedelta #line:5
+from google .auth .transport .requests import Request #line:6
+from google .oauth2 .credentials import Credentials #line:7
+from google_auth_oauthlib .flow import InstalledAppFlow #line:8
+from googleapiclient .discovery import build #line:9
+from googleapiclient .errors import HttpError #line:10
+import sys ,time ,random #line:11
+SCOPES =['https://www.googleapis.com/auth/calendar']#line:13
+typing_speed =70 #line:19
+def slow_type (OO0OO00OO0O00OO0O ):#line:20
+    for OO0O0OO0OO0OO0000 in OO0OO00OO0O00OO0O :#line:21
+        sys .stdout .write (OO0O0OO0OO0OO0000 )#line:22
+        sys .stdout .flush ()#line:23
+        time .sleep (random .random ()*10.0 /typing_speed )#line:24
+    print ('')#line:25
+def main ():#line:27
+    ""#line:30
+    slow_type ("Enter your surname: ")#line:31
+    for OOO0000O0O00O0OO0 in sys .stdin :#line:32
+        O000OO000OOO00OOO =OOO0000O0O00O0OO0 .strip ()#line:34
+        if 'Exit'==OOO0000O0O00O0OO0 .rstrip ():#line:35
+            break #line:36
+        if OOO0000O0O00O0OO0 .rstrip ():#line:37
+            print (O000OO000OOO00OOO +", you say, ok let's have a look")#line:38
+            break #line:39
+    OOOOO00OOO00O000O =None #line:42
+    OOO00O0OOOOOOOO0O =""#line:43
+    if os .path .exists ('token.json'):#line:48
+        OOOOO00OOO00O000O =Credentials .from_authorized_user_file ('token.json',SCOPES )#line:49
+    if not OOOOO00OOO00O000O or not OOOOO00OOO00O000O .valid :#line:51
+        if OOOOO00OOO00O000O and OOOOO00OOO00O000O .expired and OOOOO00OOO00O000O .refresh_token :#line:52
+            OOOOO00OOO00O000O .refresh (Request ())#line:53
+        else :#line:54
+            O0O000OOOOO0O0OO0 =InstalledAppFlow .from_client_secrets_file ('credentials.json',SCOPES )#line:56
+            OOOOO00OOO00O000O =O0O000OOOOO0O0OO0 .run_local_server (port =0 )#line:57
+        with open ('token.json','w')as OOOO0000O0OO0OO00 :#line:59
+            OOOO0000O0OO0OO00 .write (OOOOO00OOO00O000O .to_json ())#line:60
+    try :#line:62
+        OO00O0O0OO000O00O =build ('calendar','v3',credentials =OOOOO00OOO00O000O )#line:65
+        def OOO00O00O00OO0OOO (O0OO0000OO000OO00 ):#line:69
+            for O0OO0OO00O0OOOO0O in O0OO0000OO000OO00 :#line:70
+                print (O0OO0OO00O0OOOO0O )#line:71
+                O0OO0OO00O0OOOO0O =O0OO0OO00O0OOOO0O .isoformat ()#line:72
+                O0OO0OO00O0OOOO0O =datetime .datetime .fromisoformat (O0OO0OO00O0OOOO0O )#line:73
+                O0O00O00OOO00OO00 ={'summary':f'{OOO00O0OOOOOOOO0O} shift','description':f'Shift {OOO00O0OOOOOOOO0O}','start':{'dateTime':O0OO0OO00O0OOOO0O .isoformat (),'timeZone':'Europe/Moscow'},'end':{'dateTime':(O0OO0OO00O0OOOO0O +timedelta (hours =12 )).isoformat (),'timeZone':'Europe/Moscow',},'reminders':{'useDefault':False ,'overrides':[{'method':'popup','minutes':1440 },],}}#line:93
+                O0O00O00OOO00OO00 =OO00O0O0OO000O00O .events ().insert (calendarId ='primary',body =O0O00O00OOO00OO00 ).execute ()#line:95
+                print ('Event created: %s'%(O0O00O00OOO00OO00 .get ('htmlLink')))#line:96
+        from getdates import get_shift_dates #line:98
+        O00O00O0O00OOOO00 =get_shift_dates (O000OO000OOO00OOO )#line:99
+        OO0OOO00O00000O00 =O00O00O0O00OOOO00 ['Н']#line:101
+        OOO00O0OOOOOOOO0O ="Night"#line:102
+        OOO00O00O00OO0OOO (OO0OOO00O00000O00 )#line:103
+        OO0OOO00O00000O00 =O00O00O0O00OOOO00 ['Д']#line:104
+        OOO00O0OOOOOOOO0O ="Day"#line:105
+        OOO00O00O00OO0OOO (OO0OOO00O00000O00 )#line:106
+        OO0OOO00O00000O00 =O00O00O0O00OOOO00 ['Д2']#line:107
+        OOO00O0OOOOOOOO0O ="Day 2"#line:108
+        OOO00O00O00OO0OOO (OO0OOO00O00000O00 )#line:109
+        slow_type ("Ok, now you won't miss a single shift, bro.")#line:110
+        print_moonin ()#line:111
+    except HttpError as OO000O00O0OO00O0O :#line:115
+        print ('An error occurred: %s'%OO000O00O0OO00O0O )#line:116
+if __name__ =='__main__':#line:121
+        main ()#line:122
