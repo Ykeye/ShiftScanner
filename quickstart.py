@@ -8,7 +8,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-
+import sys,time,random
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
@@ -16,6 +16,13 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 
 
+typing_speed = 50 #wpm
+def slow_type(t):
+    for l in t:
+        sys.stdout.write(l)
+        sys.stdout.flush()
+        time.sleep(random.random()*10.0/typing_speed)
+    print('')
 
 def main():
     """Shows basic usage of the Google Calendar API.
@@ -50,7 +57,16 @@ def main():
                                               maxResults=10, singleEvents=True,
                                               orderBy='startTime').execute()
         events = events_result.get('items', [])
-        date = get_shift_dates("Конев")
+        slow_type("Enter your surname: ")
+        for line in sys.stdin:
+
+            surname = line.strip()
+            if 'Exit' == line.rstrip():
+                break
+            if line.rstrip():
+                print(surname + ", you say, ok let's have a look")
+                break
+        date = get_shift_dates(surname)
 
 
         def uploader(list):
@@ -93,14 +109,6 @@ def main():
         uploader(up_date)
 
 
-        if not events:
-            print('No upcoming events found.')
-            return
-
-        # Prints the start and name of the next 10 events
-        for event in events:
-            start = event['start'].get('dateTime', event['start'].get('date'))
-            print(start, event['summary'])
 
 
 
