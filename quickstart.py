@@ -22,6 +22,7 @@ def main():
     Prints the start and name of the next 10 events on the user's calendar.
     """
     creds = None
+    when = ""
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
@@ -51,22 +52,30 @@ def main():
         events = events_result.get('items', [])
         date = get_shift_dates("Конев")
 
+
         def uploader(list):
             for i in list:
+                print(i)
                 i = i.isoformat()
                 i = datetime.datetime.fromisoformat(i)
 
                 event = {
-                    'summary': 'Night',
-                    'description': 'Night Shift',
+                    'summary': f'{when} shift',
+                    'description': f'Shift {when}',
                     'start': {
                         'dateTime': i.isoformat(),
                         'timeZone': 'Europe/Moscow'
                     },
                     'end': {
-                        'dateTime': (i + timedelta(hours=11)).isoformat(),
+                        'dateTime': (i + timedelta(hours=12)).isoformat(),
                         'timeZone': 'Europe/Moscow',
                     },
+                    'reminders':{
+                        'useDefault' : False,
+                        'overrides': [
+                            {'method': 'popup', 'minutes': 1440},
+                        ],
+                        }
 
                 }
 
@@ -74,11 +83,14 @@ def main():
                 print('Event created: %s' % (event.get('htmlLink')))
 
         up_date = date['Н']
+        when = "Night"
         uploader(up_date)
         up_date = date['Д']
+        when = "Day"
         uploader(up_date)
         up_date = date ['Д2']
-        uploader(date)
+        when = "Day 2"
+        uploader(up_date)
 
 
         if not events:
