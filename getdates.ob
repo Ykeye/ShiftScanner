@@ -1,0 +1,54 @@
+import openpyxl ,sys ,time ,random #line:1
+from datetime import datetime ,timedelta #line:2
+typing_speed =70 #line:4
+def slow_type (OO00000O000OOOO0O ):#line:5
+    for OOO0OOOO0OO0OOO00 in OO00000O000OOOO0O :#line:6
+        sys .stdout .write (OOO0OOOO0OO0OOO00 )#line:7
+        sys .stdout .flush ()#line:8
+        time .sleep (random .random ()*10.0 /typing_speed )#line:9
+    print ('')#line:10
+slow_type ("And now, tell me where do you hide your corporate secret schedule: ")#line:12
+for line in sys .stdin :#line:14
+    file_location =line .strip ()#line:16
+    if 'Exit'==line .rstrip ():#line:17
+        break #line:18
+    if line .rstrip ():#line:19
+        print (file_location +", you say, ok let's have a look")#line:20
+        break #line:21
+wb =openpyxl .load_workbook (file_location )#line:23
+sheet =wb ['Лист1']#line:24
+ws =wb .active #line:25
+def get_shift_dates (O0OOOOOOO0OO000OO ):#line:27
+    for O00O0O0O0O0O000O0 in tuple (ws .rows ):#line:29
+        O00O0O0O0O0O000O0 =str (O00O0O0O0O0O000O0 [1 ])#line:30
+        O00O0O0O0O0O000O0 =O00O0O0O0O0O000O0 .split (".")#line:31
+        O00O0O0O0O0O000O0 =O00O0O0O0O0O000O0 [1 ]#line:32
+        O00O0O0O0O0O000O0 =O00O0O0O0O0O000O0 [:-1 ]#line:33
+        OO0O0OOO0OO0000OO =sheet [f'{O00O0O0O0O0O000O0}'].value #line:34
+        O0000O0O000OOO00O =O00O0O0O0O0O000O0 [-2 :]#line:35
+        if OO0O0OOO0OO0000OO ==str (O0OOOOOOO0OO000OO ):#line:36
+            OOOOO0000O0OO000O =O0000O0O000OOO00O #line:37
+    OO00000O00O000O00 =ws .calculate_dimension ()#line:40
+    OO00000O00O000O00 =(OO00000O00O000O00 .split (":")[1 ])#line:42
+    OO00000O00O000O00 =OO00000O00O000O00 [:2 ]#line:43
+    OO00000O00O000O00 =openpyxl .utils .cell .column_index_from_string (OO00000O00O000O00 )#line:46
+    OO0000O0O0OO0O0OO ={}#line:50
+    O0O00OOO0OOO0OO0O =[]#line:51
+    O0OOO000O0O0OOO0O =[]#line:52
+    O0O0O0O000O00O000 =[]#line:53
+    for O0OO00O00OOOO0OO0 in range (3 ,int (OO00000O00O000O00 )):#line:54
+            O0O0O00OO00O0OO0O =ws .cell (row =int (OOOOO0000O0OO000O ),column =int (O0OO00O00OOOO0OO0 )).value #line:55
+            if O0O0O00OO00O0OO0O =='Н':#line:57
+                    OOO0OO0O000000000 =(ws .cell (row =1 ,column =int ((O0OO00O00OOOO0OO0 ))-1 ).value )#line:59
+                    OOO0OO0O000000000 =OOO0OO0O000000000 +timedelta (hours =20 )#line:60
+                    O0O00OOO0OOO0OO0O +=[OOO0OO0O000000000 ]#line:61
+            elif O0O0O00OO00O0OO0O =="Д":#line:63
+                    OOO0OO0O000000000 =(ws .cell (row =1 ,column =int (O0OO00O00OOOO0OO0 )).value )#line:64
+                    OOO0OO0O000000000 =OOO0OO0O000000000 +timedelta (hours =8 )#line:65
+                    O0OOO000O0O0OOO0O +=[OOO0OO0O000000000 ]#line:66
+            elif O0O0O00OO00O0OO0O =="Д2":#line:68
+                   OOO0OO0O000000000 =(ws .cell (row =1 ,column =int (O0OO00O00OOOO0OO0 )).value )#line:69
+                   OOO0OO0O000000000 =OOO0OO0O000000000 +timedelta (hours =8 )#line:70
+                   O0O0O0O000O00O000 +=[OOO0OO0O000000000 ]#line:71
+    OO0000O0O0OO0O0OO .update ({'Н':O0O00OOO0OOO0OO0O ,'Д':O0OOO000O0O0OOO0O ,'Д2':O0O0O0O000O00O000 })#line:73
+    return OO0000O0O0OO0O0OO #line:76
