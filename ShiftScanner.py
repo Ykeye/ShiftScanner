@@ -1,5 +1,5 @@
 from __future__ import print_function
-from getdates import get_shift_dates
+
 import datetime
 import os.path
 from datetime import timedelta
@@ -16,7 +16,7 @@ SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 
 
-typing_speed = 50 #wpm
+typing_speed = 70 #wpm
 def slow_type(t):
     for l in t:
         sys.stdout.write(l)
@@ -28,8 +28,20 @@ def main():
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
+    slow_type("Enter your surname: ")
+    for line in sys.stdin:
+
+        surname = line.strip()
+        if 'Exit' == line.rstrip():
+            break
+        if line.rstrip():
+            print(surname + ", you say, ok let's have a look")
+            break
+
+
     creds = None
     when = ""
+
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
@@ -48,25 +60,10 @@ def main():
             token.write(creds.to_json())
 
     try:
+
+
         service = build('calendar', 'v3', credentials=creds)
 
-        # Call the Calendar API
-        now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-        print('Getting the upcoming 10 events')
-        events_result = service.events().list(calendarId='primary', timeMin=now,
-                                              maxResults=10, singleEvents=True,
-                                              orderBy='startTime').execute()
-        events = events_result.get('items', [])
-        slow_type("Enter your surname: ")
-        for line in sys.stdin:
-
-            surname = line.strip()
-            if 'Exit' == line.rstrip():
-                break
-            if line.rstrip():
-                print(surname + ", you say, ok let's have a look")
-                break
-        date = get_shift_dates(surname)
 
 
         def uploader(list):
@@ -98,6 +95,9 @@ def main():
                 event = service.events().insert(calendarId='primary', body=event).execute()
                 print('Event created: %s' % (event.get('htmlLink')))
 
+        from getdates import get_shift_dates
+        date = get_shift_dates(surname)
+
         up_date = date['Н']
         when = "Night"
         uploader(up_date)
@@ -107,7 +107,7 @@ def main():
         up_date = date ['Д2']
         when = "Day 2"
         uploader(up_date)
-
+        slow_type("Ok, now you won't miss a single shift, bro.")
 
 
 

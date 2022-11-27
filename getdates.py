@@ -1,7 +1,26 @@
-import openpyxl
+import openpyxl, sys, time, random
 from datetime import datetime, timedelta
 
-wb = openpyxl.load_workbook("./shifts.xlsx")
+typing_speed = 70 #wpm
+def slow_type(t):
+    for l in t:
+        sys.stdout.write(l)
+        sys.stdout.flush()
+        time.sleep(random.random()*10.0/typing_speed)
+    print('')
+
+slow_type("And now, tell me where do you hide your corporate secret schedule: ")
+
+for line in sys.stdin:
+
+    file_location = line.strip()
+    if 'Exit' == line.rstrip():
+        break
+    if line.rstrip():
+        print(file_location + ", you say, ok let's have a look")
+        break
+
+wb = openpyxl.load_workbook(file_location)
 sheet = wb['Лист1']
 ws = wb.active
 
