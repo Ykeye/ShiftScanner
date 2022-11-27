@@ -51,33 +51,34 @@ def main():
         events = events_result.get('items', [])
         date = get_shift_dates("Конев")
 
-        date = date['Н']
+        def uploader(list):
+            for i in list:
+                i = i.isoformat()
+                i = datetime.datetime.fromisoformat(i)
 
-        for i in date:
-            i = i.isoformat()
-            i= datetime.datetime.fromisoformat(i)
+                event = {
+                    'summary': 'Night',
+                    'description': 'Night Shift',
+                    'start': {
+                        'dateTime': i.isoformat(),
+                        'timeZone': 'Europe/Moscow'
+                    },
+                    'end': {
+                        'dateTime': (i + timedelta(hours=11)).isoformat(),
+                        'timeZone': 'Europe/Moscow',
+                    },
 
-
-
-            event = {
-                'summary': 'Night',
-                'description': 'Night Shift',
-                'start': {
-                    'dateTime': i.isoformat(),
-                    'timeZone': 'Etc/GMT+3'
-                },
-                'end': {
-                    'dateTime': (i + timedelta(hours=12)).isoformat(),
-                    'timeZone': 'Europe/Moscow',
-                },
-                'recurrence': [
-                    'RRULE:FREQ=DAILY;COUNT=2'
-                ],
                 }
 
+                event = service.events().insert(calendarId='primary', body=event).execute()
+                print('Event created: %s' % (event.get('htmlLink')))
 
-            event = service.events().insert(calendarId='primary', body=event).execute()
-            print('Event created: %s' % (event.get('htmlLink')))
+        up_date = date['Н']
+        uploader(up_date)
+        up_date = date['Д']
+        uploader(up_date)
+        up_date = date ['Д2']
+        uploader(date)
 
 
         if not events:
