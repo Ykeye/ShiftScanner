@@ -1,5 +1,5 @@
 from __future__ import print_function
-
+from print_moonin import print_moonin
 import datetime
 import os.path
 from datetime import timedelta
@@ -108,7 +108,7 @@ def main():
         when = "Day 2"
         uploader(up_date)
         slow_type("Ok, now you won't miss a single shift, bro.")
-
+        print_moonin()
 
 
 
