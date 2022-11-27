@@ -1,8 +1,8 @@
 from __future__ import print_function
-
+from getdates import get_shift_dates
 import datetime
 import os.path
-
+from datetime import timedelta
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -10,7 +10,11 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+SCOPES = ['https://www.googleapis.com/auth/calendar']
+
+
+
+
 
 
 def main():
@@ -45,6 +49,36 @@ def main():
                                               maxResults=10, singleEvents=True,
                                               orderBy='startTime').execute()
         events = events_result.get('items', [])
+        date = get_shift_dates("Конев")
+
+        date = date['Н']
+
+        for i in date:
+            i = i.isoformat()
+            i= datetime.datetime.fromisoformat(i)
+
+
+
+            event = {
+                'summary': 'Night',
+                'description': 'Night Shift',
+                'start': {
+                    'dateTime': i.isoformat(),
+                    'timeZone': 'Etc/GMT+3'
+                },
+                'end': {
+                    'dateTime': (i + timedelta(hours=12)).isoformat(),
+                    'timeZone': 'Europe/Moscow',
+                },
+                'recurrence': [
+                    'RRULE:FREQ=DAILY;COUNT=2'
+                ],
+                }
+
+
+            event = service.events().insert(calendarId='primary', body=event).execute()
+            print('Event created: %s' % (event.get('htmlLink')))
+
 
         if not events:
             print('No upcoming events found.')
@@ -55,13 +89,16 @@ def main():
             start = event['start'].get('dateTime', event['start'].get('date'))
             print(start, event['summary'])
 
+
+
     except HttpError as error:
         print('An error occurred: %s' % error)
 
 
-if __name__ == '__main__':
-    main()
 
+
+if __name__ == '__main__':
+        main()
 
 
 
