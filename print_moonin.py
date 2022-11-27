@@ -1,5 +1,4 @@
 def print_moonin():
-
     print('''
                               @@@
                                .@::               @@
